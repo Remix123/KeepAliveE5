@@ -59,7 +59,7 @@ register_app() {
         -u "$username" \
         -p "$password" \
         --only-show-errors 1>/dev/null || {
-        echo "登录失败，账号或密码错误，或未关闭安全默认值（多因素认证），请进一步阅读英文日志"
+        echo "登录失败。请检查 PASSWD secret 是否为当前有效密码、账号是否要求重置密码，以及安全默认值/多因素认证是否已关闭。"
         exit 1
     }
 

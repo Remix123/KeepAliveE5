@@ -10,13 +10,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: master
           token: ${{ secrets.PAT }}
-
-      - name: Sync with upstream
-        run: bash wrapper.sh pull
 
       - name: Check environment variables
         env:
@@ -26,21 +23,21 @@ jobs:
 
       - name: Setup nodejs
         id: setup-nodejs
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 18.14
-          # cache: 'npm'
-          # cache-dependency-path: '**/package.json'
+          node-version: 24
+          cache: 'npm'
+          cache-dependency-path: 'register/package-lock.json'
 
       - name: Set up python
         id: setup-python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.10'
 
       - name: Load cached utils
         id: cached-utils
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.local
           key: ${{ runner.os }}-utils-az-poetry-20241024
@@ -69,7 +66,7 @@ jobs:
 
       - name: Load cached venv
         id: cached-poetry-dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .venv
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-venv-${{ hashFiles('**/poetry.lock') }}
@@ -80,14 +77,14 @@ jobs:
 
       - name: Load cached node dependencies
         id: cached-node-dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: register/node_modules
-          key: ${{ runner.os }}-node-${{ steps.setup-nodejs.outputs.node-version }}-pkg-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-node-${{ steps.setup-nodejs.outputs.node-version }}-pkg-${{ hashFiles('register/package-lock.json') }}
 
       - name: Install node dependencies
         if: steps.cached-node-dependencies.outputs.cache-hit != 'true'
-        run: cd register && npm install
+        run: cd register && npm ci
 
       - name: Register apps
         env:
