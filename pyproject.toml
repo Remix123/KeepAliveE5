@@ -11,7 +11,7 @@ pycryptodome = "^3.10.1"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.6"
-rope = "^0.19.0"
+rope = "^1.14.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
